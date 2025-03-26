@@ -27,15 +27,20 @@ class ToDoController {
 
   createToDo = async (req: express.Request, res: express.Response) => {
     try {
-      const { date, title, status, priority } = req.body;
-      const todo = new ToDoModel({
-        date,
-        title,
-        status,
-        priority,
-      });
-      await todo.save();
+      const todo = await ToDoModel.collection.insertOne(req.body);
+
       return res.json({ message: "Todo has been created", data: todo });
+    } catch (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+  };
+
+  createToDos = async (req: express.Request, res: express.Response) => {
+    try {
+      const todos = await ToDoModel.collection.insertMany(req.body);
+
+      return res.json({ message: "Todo has been created", data: todos });
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
