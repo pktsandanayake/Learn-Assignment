@@ -40,6 +40,11 @@ class ToDoController {
 
   createToDo = async (req: express.Request, res: express.Response) => {
     try {
+      const { date } = req.body;
+
+      if (Object.keys(req.body).length === 0) {
+        return res.sendStatus(400);
+      }
       const todo = await ToDoModel.collection.insertOne(req.body);
 
       return res.json({ message: "Todo has been created", data: todo });
@@ -51,6 +56,9 @@ class ToDoController {
 
   createToDos = async (req: express.Request, res: express.Response) => {
     try {
+      if (Object.keys(req.body).length === 0) {
+        return res.sendStatus(400);
+      }
       const todos = await ToDoModel.collection.insertMany(req.body);
 
       return res.json({ message: "Todo has been created", data: todos });
@@ -62,6 +70,9 @@ class ToDoController {
 
   updateToDo = async (req: express.Request, res: express.Response) => {
     try {
+      if (Object.keys(req.body).length === 0) {
+        return res.sendStatus(400);
+      }
       const { id } = req.params;
       const { timeStamp, title, status, priority } = req.body;
 
