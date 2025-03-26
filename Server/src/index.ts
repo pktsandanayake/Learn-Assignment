@@ -10,7 +10,7 @@ const MOGO_URL =
   "mongodb+srv://sajani:Pktsanda730920@learn-assignment.ipd5a.mongodb.net/?appName=Learn-Assignment";
 
 mongoose
-  .connect(MOGO_URL)
+  .connect(MOGO_URL, { dbName: "Tasks" })
   .then(() => console.log("Database connected........"))
   .catch((error) => console.log(error));
 
