@@ -25,6 +25,20 @@ class ToDoController {
     }
   };
 
+  getToDoByDate = async (req: express.Request, res: express.Response) => {
+    try {
+      const { date } = req.params;
+      console.log(date);
+      const todos = await ToDoModel.find({
+        date: date,
+      });
+      return res.json({ data: todos });
+    } catch (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+  };
+
   createToDo = async (req: express.Request, res: express.Response) => {
     try {
       const todo = await ToDoModel.collection.insertOne(req.body);
@@ -50,11 +64,11 @@ class ToDoController {
   updateToDo = async (req: express.Request, res: express.Response) => {
     try {
       const { id } = req.params;
-      const { date, title, status, priority } = req.body;
+      const { timeStamp, title, status, priority } = req.body;
 
       const todo = await ToDoModel.findById(id);
       if (todo) {
-        todo.date = date;
+        todo.timeStamp = timeStamp;
         todo.title = title;
         todo.status = status;
         todo.priority = priority;
@@ -74,6 +88,16 @@ class ToDoController {
       const { id } = req.params;
       await ToDoModel.findByIdAndDelete({ _id: id });
       return res.json({ message: "record deleted" });
+    } catch (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+  };
+
+  deleteToDos = async (req: express.Request, res: express.Response) => {
+    try {
+      const todos = await ToDoModel.collection.deleteMany();
+      return res.json({ message: "All record deleted" });
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
