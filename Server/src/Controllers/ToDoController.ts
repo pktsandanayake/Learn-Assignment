@@ -28,7 +28,6 @@ class ToDoController {
   getToDoByDate = async (req: express.Request, res: express.Response) => {
     try {
       const { date } = req.params;
-      console.log(date);
       const todos = await ToDoModel.find({
         date: date,
       });
