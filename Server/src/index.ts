@@ -17,7 +17,8 @@ mongoose
 
 app.use("/", router);
 const corsOptions = {
-  origin: "*",
+  origin: process.env.ALLOWED_ORIGINS,
+  optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
 
