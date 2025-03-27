@@ -8,7 +8,7 @@ class ToDoController {
   ): Promise<any> => {
     try {
       const todos = await ToDoModel.find();
-      return res.json({ data: todos });
+      return res.json(todos);
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
@@ -19,7 +19,7 @@ class ToDoController {
     try {
       const { id } = req.params;
       const todo = await ToDoModel.findById(id);
-      return res.json({ data: todo });
+      return res.json(todo);
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
@@ -32,7 +32,7 @@ class ToDoController {
       const todos = await ToDoModel.find({
         date: date,
       });
-      return res.json({ data: todos });
+      return res.json(todos);
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
@@ -50,7 +50,7 @@ class ToDoController {
         _id: dependancy,
         status: status.NotDone,
       });
-      return res.json({ data: todos });
+      return res.json(todos);
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
@@ -63,7 +63,7 @@ class ToDoController {
       }
       const todo = await ToDoModel.collection.insertOne(req.body);
 
-      return res.json({ message: "Todo has been created", data: todo });
+      return res.json({ message: "Todo has been created", todo });
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
@@ -77,7 +77,7 @@ class ToDoController {
       }
       const todos = await ToDoModel.collection.insertMany(req.body);
 
-      return res.json({ message: "Todo has been created", data: todos });
+      return res.json({ message: "Todo has been created", todos });
     } catch (error) {
       console.log(error);
       return res.sendStatus(400);
@@ -90,17 +90,17 @@ class ToDoController {
         return res.sendStatus(400);
       }
       const { id } = req.params;
-      const { timeStamp, title, status, priority, dependancy } = req.body;
+      const { date, title, status, priority, dependancy } = req.body;
 
       const todo = await ToDoModel.findById(id);
       if (todo) {
-        todo.timeStamp = timeStamp;
+        todo.date = date;
         todo.title = title;
         todo.status = status;
         todo.priority = priority;
         todo.dependancy = dependancy;
         await todo.save();
-        return res.json({ message: "Todo has been updated", data: todo });
+        return res.json({ message: "Todo has been updated", todo });
       }
 
       return res.sendStatus(400);

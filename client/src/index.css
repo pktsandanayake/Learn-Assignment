@@ -1,0 +1,7 @@
+.tdWidth {
+  width: 100px;
+}
+.row {
+  position: fixed;
+  display: flex;
+}
