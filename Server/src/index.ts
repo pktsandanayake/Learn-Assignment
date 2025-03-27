@@ -15,7 +15,10 @@ mongoose
   .catch((error) => console.log(error));
 
 app.use("/", router);
-app.use(cors);
+const corsOptions = {
+  origin: "*",
+};
+app.use(cors(corsOptions));
 
 app.listen(4000, () =>
   console.log("Server is running on http://localhost:4000")
