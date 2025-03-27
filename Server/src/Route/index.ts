@@ -6,6 +6,7 @@ const router = express.Router();
 router.get("/todos", ToDoController.getAllToDos);
 router.get("/todo/:id", ToDoController.getToDo);
 router.get("/todos/date/:date", ToDoController.getToDoByDate);
+router.get("/todos/dependency", ToDoController.getToDosByDependency);
 router.post("/todo", ToDoController.createToDo);
 router.post("/todos", ToDoController.createToDos);
 router.put("/todo/:id", ToDoController.updateToDo);

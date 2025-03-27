@@ -1,5 +1,6 @@
 import express from "express";
 import { ToDoModel } from "../DB/ToDo";
+import status from "../enums/status";
 class ToDoController {
   getAllToDos = async (
     req: express.Request,
@@ -38,10 +39,25 @@ class ToDoController {
     }
   };
 
+  getToDosByDependency = async (
+    req: express.Request,
+    res: express.Response
+  ) => {
+    try {
+      const { dependancy } = req.body;
+      console.log("Dependency", dependancy);
+      const todos = await ToDoModel.find({
+        _id: dependancy,
+        status: status.NotDone,
+      });
+      return res.json({ data: todos });
+    } catch (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+  };
   createToDo = async (req: express.Request, res: express.Response) => {
     try {
-      const { date } = req.body;
-
       if (Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
       }
