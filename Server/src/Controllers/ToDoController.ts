@@ -74,7 +74,7 @@ class ToDoController {
         return res.sendStatus(400);
       }
       const { id } = req.params;
-      const { timeStamp, title, status, priority } = req.body;
+      const { timeStamp, title, status, priority, dependancy } = req.body;
 
       const todo = await ToDoModel.findById(id);
       if (todo) {
@@ -82,6 +82,7 @@ class ToDoController {
         todo.title = title;
         todo.status = status;
         todo.priority = priority;
+        todo.dependancy = dependancy;
         await todo.save();
         return res.json({ message: "Todo has been updated", data: todo });
       }

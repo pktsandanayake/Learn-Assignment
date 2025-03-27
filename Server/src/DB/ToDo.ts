@@ -6,6 +6,7 @@ const ToDoSchema = new mongoose.Schema({
   title: { type: String, required: true },
   status: { type: String, required: true },
   priority: { type: String, required: true },
+  dependancy: { type: Array, required: false },
 });
 
 export const ToDoModel = mongoose.model("ToDo", ToDoSchema);
