@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import router from "./Route";
 import cors from "cors";
 import dotenv from "dotenv";
-
+import { corsOrigin } from "./Midlewares/corsOrigin";
 dotenv.config();
 const app = express();
 app.use(express.json());
@@ -16,12 +16,8 @@ mongoose
   .catch((error) => console.log(error));
 
 app.use("/", router);
-const corsOptions = {
-  origin: process.env.ALLOWED_ORIGINS,
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
 
+app.all("*", corsOrigin);
 app.listen(process.env.PORT, () =>
   console.log(`Server is running on ${process.env.BASE_URL}:`, process.env.PORT)
 );
