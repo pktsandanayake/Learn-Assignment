@@ -7,6 +7,10 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "paths": {
+      "@/*": ["./*"],
+      "react": ["./node_modules/@types/react"]
+    },
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
@@ -16,5 +20,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "allowSyntheticDefaultImports": true
 }
