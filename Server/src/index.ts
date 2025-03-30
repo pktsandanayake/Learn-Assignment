@@ -8,6 +8,14 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
 const MOGO_URL = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@learn-assignment.ipd5a.mongodb.net/?appName=${process.env.APPNAME}`;
 console.log("Connection", MOGO_URL);
 mongoose
@@ -16,7 +24,6 @@ mongoose
   .catch((error) => console.log(error));
 
 app.use("/", router);
-app.use(cors({ origin: "*" }));
 
 app.listen(process.env.PORT, () =>
   console.log(`Server is running on ${process.env.BASE_URL}:`, process.env.PORT)

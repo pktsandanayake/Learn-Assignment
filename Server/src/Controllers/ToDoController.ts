@@ -3,7 +3,6 @@ import { ToDoModel } from "../DB/ToDo";
 import status from "../enums/status";
 class ToDoController {
   getAllToDos = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       const todos = await ToDoModel.find();
       return res.json(todos);
@@ -14,7 +13,6 @@ class ToDoController {
   };
 
   getToDo = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       const { id } = req.params;
       const todo = await ToDoModel.findById(id);
@@ -26,9 +24,7 @@ class ToDoController {
   };
 
   getToDoByDate = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
-      res.setHeader("Access-Control-Allow-Origin", "*");
       const { date } = req.params;
       const todos = await ToDoModel.find({
         date: date,
@@ -44,7 +40,6 @@ class ToDoController {
     req: express.Request,
     res: express.Response
   ) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       const { dependancy } = req.body;
       console.log("Dependency", dependancy);
@@ -58,8 +53,32 @@ class ToDoController {
       return res.sendStatus(400);
     }
   };
+
+  getToDosByFilter = async (req: express.Request, res: express.Response) => {
+    try {
+      const { priority, status, title, interval } = req.params;
+      console.log("priority:", priority, "status:", status, "title:", title);
+
+      const Where =
+        title == "NoTitle"
+          ? {
+              priority: priority,
+              status: status,
+            }
+          : {
+              priority: priority,
+              status: status,
+              title: { $regex: title },
+            };
+      console.log("Where", Where);
+      const todos = await ToDoModel.find(Where);
+      return res.json(todos);
+    } catch (error) {
+      console.log(error);
+      return res.sendStatus(400);
+    }
+  };
   createToDo = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       if (Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
@@ -74,7 +93,6 @@ class ToDoController {
   };
 
   createToDos = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       if (Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
@@ -89,7 +107,6 @@ class ToDoController {
   };
 
   updateToDo = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       if (Object.keys(req.body).length === 0) {
         return res.sendStatus(400);
@@ -116,7 +133,6 @@ class ToDoController {
   };
 
   deleteToDo = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       const { id } = req.params;
       await ToDoModel.findByIdAndDelete({ _id: id });
@@ -128,7 +144,6 @@ class ToDoController {
   };
 
   deleteToDos = async (req: express.Request, res: express.Response) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
     try {
       const todos = await ToDoModel.collection.deleteMany();
       return res.json({ message: "All record deleted" });

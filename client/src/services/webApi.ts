@@ -21,6 +21,29 @@ const getToDosByFilter = (priority: string, status: string, title: string) => {
     .catch((error) => console.log(error));
 };
 
-const api = { getToDosByDate, getToDosByFilter };
+const saveTodos = () => {
+  return axios
+    .post(
+      `http://localhost:4000/todo`,
+      {
+        date: "2025-03-30",
+        title: "Grass cutting - Last day",
+        status: "NotDone",
+        priority: "Medium",
+        dependancy: [],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((data) => {
+      return data.data;
+    })
+    .catch((error) => console.log(error));
+};
+
+const api = { getToDosByDate, getToDosByFilter, saveTodos };
 
 export default api;
