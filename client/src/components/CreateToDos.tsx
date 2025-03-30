@@ -2,16 +2,18 @@ import React from "react";
 import RadionButtonFilter from "./Filters/RadioButton/RadionButtonFilter";
 import CalendarFilter from "./Filters/CalendarFilter";
 import SearchTextFilter from "./Filters/SearchTextFilter";
+import { valuePair } from "../Interfaces/valuePair";
+
 interface prop {
   setPriority: React.Dispatch<React.SetStateAction<string>>;
-  setInterval: React.Dispatch<React.SetStateAction<string>>;
-  setSearchText: React.Dispatch<React.SetStateAction<string>>;
+  setInterval: React.Dispatch<React.SetStateAction<valuePair>>;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
   handleInsert: () => void;
 }
 const CreateToDos = ({
   setPriority,
   setInterval,
-  setSearchText,
+  setTitle,
   handleInsert,
 }: prop) => {
   return (
@@ -35,7 +37,7 @@ const CreateToDos = ({
           </div>
 
           <div className="table-body-cell-non">
-            <SearchTextFilter setFunction={setSearchText} />
+            <SearchTextFilter setFunction={setTitle} />
           </div>
 
           <div className="table-body-cell-non">

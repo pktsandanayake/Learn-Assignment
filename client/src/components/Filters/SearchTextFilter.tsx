@@ -19,7 +19,7 @@ const SearchTextFilter = ({ setFunction }: prop) => {
         <div className="table-body-cell-non">
           <input
             type="text"
-            placeholder="Enter a task"
+            placeholder="Enter a title"
             className="input-box"
             onChange={(e) => Handler(e.target.value)}
           />

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import RadionButtonFilter from "./RadioButton/RadionButtonFilter";
 import CalendarFilter from "./CalendarFilter";
 import SearchTextFilter from "./SearchTextFilter";
+import { valuePair } from "@/src/Interfaces/valuePair";
 interface prop {
   setPriority: React.Dispatch<React.SetStateAction<string>>;
   setStatus: React.Dispatch<React.SetStateAction<string>>;
-  setInterval: React.Dispatch<React.SetStateAction<string>>;
+  setInterval: React.Dispatch<React.SetStateAction<valuePair>>;
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
 }
 const FilterPanel = ({
@@ -40,9 +41,7 @@ const FilterPanel = ({
         <div className="table-body-cell">
           <CalendarFilter setFunction={setInterval} />
         </div>
-        {/* <div className="table-body-cell">
-          <label className="title">Title </label>
-        </div> */}
+
         <div className="table-body-cell">
           <SearchTextFilter setFunction={setSearchText} />
         </div>

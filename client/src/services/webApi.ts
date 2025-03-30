@@ -35,23 +35,32 @@ const getToDosByDependency = async (e: any) => {
     .catch((error) => console.log(error));
 };
 
-const saveTodos = async () => {
+const saveTodos = async (body: any) => {
+  const Tbody = [
+    {
+      date: "2025-03-31",
+      title: "Grass cutting - Last day-Testing...bulk insertion",
+      status: "NotDone",
+      priority: "Medium",
+      dependancy: [],
+    },
+    {
+      date: "2025-03-31",
+      title: "Grass cutting - Last day-Testing...",
+      status: "NotDone",
+      priority: "Low",
+      dependancy: [],
+    },
+  ];
+
+  //console.log(body);
+
   return await axios
-    .post(
-      `http://localhost:4000/todo`,
-      {
-        date: "2025-03-31",
-        title: "Grass cutting - Last day-Testing...",
-        status: "NotDone",
-        priority: "Medium",
-        dependancy: [],
+    .post(`${ApiBaseUrl}/todos`, body, {
+      headers: {
+        "Content-Type": "application/json",
       },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    )
+    })
     .then((data) => {
       return data.data;
     })
