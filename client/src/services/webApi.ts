@@ -2,8 +2,8 @@ import axios from "axios";
 
 const ApiBaseUrl = "http://localhost:4000";
 
-const getToDosByDate = (Date: string) => {
-  return axios
+const getToDosByDate = async (Date: string) => {
+  return await axios
     .get(`${ApiBaseUrl}/todos/date/${Date}`)
     .then((data) => {
       return data.data;
@@ -11,9 +11,14 @@ const getToDosByDate = (Date: string) => {
     .catch((error) => console.log(error));
 };
 
-const getToDosByFilter = (priority: string, status: string, title: string) => {
+const getToDosByFilter = async (
+  priority: string,
+  status: string,
+  title: string
+) => {
+  console.log("Serch function is calling....");
   const titleParam = title ? title : "NoTitle";
-  return axios
+  return await axios
     .get(`${ApiBaseUrl}/todos/filter/${priority}/${status}/${titleParam}`)
     .then((data) => {
       return data.data;
@@ -21,13 +26,22 @@ const getToDosByFilter = (priority: string, status: string, title: string) => {
     .catch((error) => console.log(error));
 };
 
-const saveTodos = () => {
-  return axios
+const getToDosByDependency = async (e: any) => {
+  return await axios
+    .post(`${ApiBaseUrl}/todos/dependency`, e)
+    .then((data) => {
+      return data.data;
+    })
+    .catch((error) => console.log(error));
+};
+
+const saveTodos = async () => {
+  return await axios
     .post(
       `http://localhost:4000/todo`,
       {
-        date: "2025-03-30",
-        title: "Grass cutting - Last day",
+        date: "2025-03-31",
+        title: "Grass cutting - Last day-Testing...",
         status: "NotDone",
         priority: "Medium",
         dependancy: [],
@@ -44,6 +58,39 @@ const saveTodos = () => {
     .catch((error) => console.log(error));
 };
 
-const api = { getToDosByDate, getToDosByFilter, saveTodos };
+const editTodos = async (e: any) => {
+  const body = {
+    _id: e._id,
+    date: e.date,
+    title: "Nut Gathering - Kishan 123 -Edited",
+    status: e.status,
+    priority: e.priority,
+    dependancy: e.dependancy,
+  };
+  return await axios
+    .put(`${ApiBaseUrl}/todo/${e._id}`, body)
+    .then((data) => {
+      return data.data;
+    })
+    .catch((error) => console.log(error));
+};
+
+const deleteTodo = async (e: any) => {
+  return await axios
+    .delete(`${ApiBaseUrl}/todo/${e}`)
+    .then((data) => {
+      return data.data;
+    })
+    .catch((error) => console.log(error));
+};
+
+const api = {
+  getToDosByDate,
+  getToDosByFilter,
+  saveTodos,
+  editTodos,
+  deleteTodo,
+  getToDosByDependency,
+};
 
 export default api;

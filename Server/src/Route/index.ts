@@ -10,7 +10,7 @@ router.get(
   "/todos/filter/:priority/:status/:title",
   ToDoController.getToDosByFilter
 );
-router.get("/todos/dependency", ToDoController.getToDosByDependency);
+router.post("/todos/dependency", ToDoController.getToDosByDependency);
 router.post("/todo", ToDoController.createToDo);
 router.post("/todos", ToDoController.createToDos);
 router.put("/todo/:id", ToDoController.updateToDo);

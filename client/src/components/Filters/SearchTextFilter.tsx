@@ -1,22 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 
 interface prop {
   setFunction: React.Dispatch<React.SetStateAction<string>>;
 }
 const SearchTextFilter = ({ setFunction }: prop) => {
-  const [searchText, setSearhText] = useState<string>("");
-  useEffect(() => setFunction(searchText), [searchText]);
+  const Handler = (e: any) => {
+    setFunction(e);
+  };
+  useCallback(() => Handler, [Handler]);
+
+  console.log("Rendering Text Control");
   return (
     <form className="input">
-      <input
-        type="text"
-        placeholder="Enter a task"
-        className="input-box"
-        value={searchText}
-        onChange={(e) => setSearhText(e.target.value)}
-      />
+      <div className="resp-table-row ">
+        <div className="table-body-cell-non">
+          <label className="title">Title</label>
+        </div>
+        <div className="table-body-cell-non">
+          <input
+            type="text"
+            placeholder="Enter a task"
+            className="input-box"
+            onChange={(e) => Handler(e.target.value)}
+          />
+        </div>
+      </div>
     </form>
   );
 };
 
-export default SearchTextFilter;
+export default React.memo(SearchTextFilter);

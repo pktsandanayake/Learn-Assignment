@@ -40,9 +40,9 @@ const FilterPanel = ({
         <div className="table-body-cell">
           <CalendarFilter setFunction={setInterval} />
         </div>
-        <div className="table-body-cell">
+        {/* <div className="table-body-cell">
           <label className="title">Title </label>
-        </div>
+        </div> */}
         <div className="table-body-cell">
           <SearchTextFilter setFunction={setSearchText} />
         </div>

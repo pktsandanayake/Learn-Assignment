@@ -42,7 +42,6 @@ class ToDoController {
   ) => {
     try {
       const { dependancy } = req.body;
-      console.log("Dependency", dependancy);
       const todos = await ToDoModel.find({
         _id: dependancy,
         status: status.NotDone,

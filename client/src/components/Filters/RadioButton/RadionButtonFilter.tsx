@@ -38,4 +38,4 @@ const RadionButtonFilter = ({ buttonsProperty, setFunction }: prop) => {
   );
 };
 
-export default RadionButtonFilter;
+export default React.memo(RadionButtonFilter);

@@ -9,7 +9,7 @@ const CalendarFilter = ({ setFunction }: prop) => {
 
   return (
     <div className="resp-table-row">
-      <div className="table-body-cell">
+      <div className="table-body-cell-non">
         <RadionButtonFilter
           setFunction={setInterval}
           buttonsProperty={[
@@ -19,7 +19,7 @@ const CalendarFilter = ({ setFunction }: prop) => {
           ]}
         />
       </div>
-      <div className="table-body-cell">
+      <div className="table-body-cell-non">
         <div className="resp-table-row">
           <input
             type={interval}
@@ -34,4 +34,4 @@ const CalendarFilter = ({ setFunction }: prop) => {
   );
 };
 
-export default CalendarFilter;
+export default React.memo(CalendarFilter);
