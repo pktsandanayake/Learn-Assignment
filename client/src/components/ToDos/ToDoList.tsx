@@ -4,6 +4,7 @@ import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import { MdDone } from "react-icons/md";
 import "../Filters/Images/edit.png";
 import "../ToDos/Style.css";
+import EditToDoModal from "../Modals/EditToDoModal";
 interface props {
   todos: todo[];
 
@@ -56,21 +57,6 @@ const ToDoList = ({ todos, editToDo, deleteDoTo, doneDoTo }: props) => {
                   />
                 </span>
               </div>
-
-              {/* <div className="table-body-cell">
-                &nbsp;&nbsp;&nbsp;
-                <span className="icon">
-                  <AiFillEdit onClick={() => editToDo(todo._id)} />
-                </span>
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="icon">
-                  <AiFillDelete />
-                </span>{" "}
-                &nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="icon">
-                  <MdDone />
-                </span>
-              </div> */}
             </div>
           ))}
         </div>

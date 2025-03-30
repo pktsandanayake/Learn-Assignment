@@ -8,7 +8,8 @@ import _debounce from "lodash/debounce";
 import CreateToDos from "./components/CreateToDos";
 import { valuePair } from "./Interfaces/valuePair";
 import getDays from "./utility/DayCalculation";
-import { title } from "process";
+
+import EditToDoModal from "./components/Modals/EditToDoModal";
 const App = () => {
   const [todos, setToDos] = useState<todo[]>([]);
   const [dependencyToDos, setDependencyToDos] = useState<todo[]>([]);
@@ -41,12 +42,35 @@ const App = () => {
   };
 
   const doneDoTo = (e: any) => {
-    console.log("Done object", e);
     api
       .getToDosByDependency(e)
-      .then((data) => console.log("Done.....", data))
+      .then((data) => {
+        setDependencyToDos(data);
+        if (data.length > 0) handleOpen();
+      })
       .catch((error) => console.log(error));
   };
+
+  const viewDependency = (e: any) => {
+    api
+      .getToDosByDependency(e)
+      .then((data) => {
+        setDependencyToDos(data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const doneDoToComplete = (todo: any) => {
+    todo.status = "Done";
+    api
+      .editTodos(todo)
+      .then((data) => {
+        viewDependency(data);
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
+  };
+
   const loadView = () => {
     api
       .getToDosByFilter(priority, status, searchText)
@@ -85,7 +109,6 @@ const App = () => {
             }`.trim()
             ),
           ];
-        // .map((e) => e.replaceAll("/", "-"));
       }
     };
 
@@ -99,9 +122,64 @@ const App = () => {
       .catch((error) => console.log(error));
   };
 
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
     <div>
-      {/* <button onClick={handleInsert}>Insert</button> */}
+      <div
+        style={{
+          textAlign: "center",
+          display: "block",
+          padding: 30,
+          margin: "auto",
+        }}
+      >
+        <EditToDoModal isOpen={open} onClose={handleClose}>
+          <>
+            <div className="resp-table-caption">
+              You have Following Dependencies
+            </div>
+            <div className="resp-table">
+              <div className="resp-table-header">
+                <div className="table-header-cell">Date</div>
+                <div className="table-header-cell">Title</div>
+                <div className="table-header-cell">Status</div>
+                <div className="table-header-cell">Priority</div>
+                <div className="table-header-cell">Action</div>
+                <div className="table-body-cell"></div>
+                <div className="table-body-cell"></div>
+              </div>
+              <div className="resp-table-body">
+                {dependencyToDos?.map((todo) => (
+                  <div className="resp-table-row" key={todo._id}>
+                    <div className="table-body-cell">{todo.date}</div>
+                    <div className="table-body-cell">{todo.title}</div>
+                    <div className="table-body-cell">{todo.status}</div>
+                    <div className="table-body-cell">{todo.priority}</div>
+
+                    <div className="table-body-cell">
+                      <span className="icon">
+                        <img
+                          src={require("../src/components/Filters/Images/done.png")}
+                          onClick={() => doneDoToComplete(todo)}
+                        />
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        </EditToDoModal>
+      </div>
       <FilterPanel
         setPriority={setPriority}
         setStatus={setStatus}
