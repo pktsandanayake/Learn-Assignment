@@ -67,11 +67,11 @@ const saveTodos = async (body: any) => {
     .catch((error) => console.log(error));
 };
 
-const editTodos = async (e: any) => {
+const editTodo = async (e: any) => {
   const body = {
     _id: e._id,
     date: e.date,
-    title: "Nut Gathering - Kishan 123 -Edited",
+    title: e.title,
     status: e.status,
     priority: e.priority,
     dependancy: e.dependancy,
@@ -97,7 +97,7 @@ const api = {
   getToDosByDate,
   getToDosByFilter,
   saveTodos,
-  editTodos,
+  editTodo,
   deleteTodo,
   getToDosByDependency,
 };

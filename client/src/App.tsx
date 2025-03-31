@@ -11,16 +11,24 @@ import getDays from "./utility/DayCalculation";
 
 import EditToDoModal from "./components/Modals/EditToDoModal";
 import Pagination from "./components/Pagination";
+import RadionButtonFilter from "./components/Filters/RadioButton/RadionButtonFilter";
+
 const App = () => {
+  let [todo, setToDo] = useState<todo>();
   const [todos, setToDos] = useState<todo[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [todosPerPage, setTodosPerPage] = useState(10);
+  const todosPerPage = 10;
   const [dependencyToDos, setDependencyToDos] = useState<todo[]>([]);
 
   const [priority, setPriority] = useState<string>("High");
   const [status, setStatus] = useState<string>("Done");
   const [interval, setInterval] = useState<valuePair>({ type: "", value: "" });
   const [searchText, setSearchText] = useState<string>("");
+
+  const [priorityEdit, setPriorityEdit] = useState<string>("");
+  const [statusEdit, setStatusEdit] = useState<string>("");
+  const [dateEdit, setDateEdit] = useState<string>("");
+  const [titleEdit, setTitleEdit] = useState<string>("");
 
   const [priorityForSave, setPriorityForSave] = useState<string>("High");
   const [intervalForSave, setIntervalForSave] = useState<valuePair>({
@@ -29,11 +37,30 @@ const App = () => {
   });
 
   const [titleForSave, setTitleForSave] = useState<string>("");
+
   const editToDo = (e: any) => {
-    api
-      .editTodos(e)
-      .then((data) => console.log(data))
-      .catch((error) => console.log(error));
+    setToDo(e);
+    setOpenDEdit(true);
+  };
+
+  const editToDoHandle = () => {
+    const editableObj = {
+      ...todo,
+      status: statusEdit,
+      priority: priorityEdit,
+      date: dateEdit,
+      title: titleEdit,
+    };
+
+    console.log("Edit object", editableObj);
+    // api
+    //   .editTodo(editableObj)
+    //   .then((data) => {
+    //     handleEditClose();
+    //     loadView();
+    //     console.log(data);
+    //   })
+    //   .catch((error) => console.log(error));
   };
   const deleteDoTo = (e: any) => {
     api
@@ -67,7 +94,7 @@ const App = () => {
   const doneDoToComplete = (todo: any) => {
     todo.status = "Done";
     api
-      .editTodos(todo)
+      .editTodo(todo)
       .then((data) => {
         viewDependency(data);
         console.log(data);
@@ -119,21 +146,27 @@ const App = () => {
     api
       .saveTodos(getBody())
       .then((e) => {
-        setStatus("NotDone");
         loadView();
+        setStatus("NotDone");
         console.log("Data saved", e);
       })
       .catch((error) => console.log(error));
   };
 
-  const [open, setOpen] = useState(false);
+  const [openDone, setOpenDone] = useState(false);
+
+  const [openEdit, setOpenDEdit] = useState(false);
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDone(false);
   };
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpenDone(true);
+  };
+
+  const handleEditClose = () => {
+    setOpenDEdit(false);
   };
 
   const lastPostIndex = currentPage * todosPerPage;
@@ -150,7 +183,7 @@ const App = () => {
           margin: "auto",
         }}
       >
-        <EditToDoModal isOpen={open} onClose={handleClose}>
+        <EditToDoModal isOpen={openDone} onClose={handleClose}>
           <>
             <div className="resp-table-caption">
               You have Following Dependencies
@@ -187,6 +220,64 @@ const App = () => {
             </div>
           </>
         </EditToDoModal>
+        <EditToDoModal isOpen={openEdit} onClose={handleEditClose}>
+          <>
+            <div className="resp-table-caption">Edit a Task</div>
+            <div className="resp-table-body">
+              <div className="resp-table-row ">
+                <div className="table-body-cell-non">
+                  <RadionButtonFilter
+                    setFunction={setPriorityEdit}
+                    buttonsProperty={[
+                      { label: "High", value: "High" },
+                      { label: "Medium", value: "Medium" },
+                      { label: "Low", value: "Low" },
+                    ]}
+                  />
+                </div>
+                <div className="table-body-cell-non">
+                  <RadionButtonFilter
+                    setFunction={setStatusEdit}
+                    buttonsProperty={[
+                      { label: "Done", value: "Done" },
+                      { label: "Not done", value: "NotDone" },
+                    ]}
+                  />
+                </div>
+
+                <div className="table-body-cell-non">
+                  <input
+                    type="Date"
+                    id="start"
+                    name="start"
+                    min="2018-03"
+                    value={todo?.date}
+                    onChange={(e: any) => setDateEdit(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="resp-table-row">
+                <div className="table-body-cell-non">
+                  <label className="title">Title</label>
+                  <input
+                    id="input-box"
+                    type="text"
+                    className="input-box"
+                    value={todo?.title.toString()}
+                    onChange={(e) => setTitleEdit(e.target.value)}
+                  />
+                </div>
+
+                <div className="table-body-cell-non">
+                  <button className="save-button" onClick={editToDoHandle}>
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        </EditToDoModal>
       </div>
       <FilterPanel
         setPriority={setPriority}
@@ -218,3 +309,6 @@ const App = () => {
 };
 
 export default App;
+function useref(arg0: string) {
+  throw new Error("Function not implemented.");
+}

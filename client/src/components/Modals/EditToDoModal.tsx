@@ -25,7 +25,7 @@ const EditToDoModal = ({ isOpen, onClose, children }: prop) => {
         style={{
           background: "white",
           height: 350,
-          width: 600,
+          width: 700,
           margin: "auto",
           padding: "2%",
           border: "2px solid #000",

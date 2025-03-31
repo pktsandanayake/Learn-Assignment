@@ -14,10 +14,13 @@ const SearchTextFilter = ({ setFunction }: prop) => {
     <form className="input">
       <div className="resp-table-row ">
         <div className="table-body-cell-non">
-          <label className="title">Title</label>
+          <label htmlFor="input-box" className="title">
+            Title
+          </label>
         </div>
         <div className="table-body-cell-non">
           <input
+            id="input-box"
             type="text"
             placeholder="Enter a title"
             className="input-box"
