@@ -140,6 +140,8 @@ const App = () => {
             }`.trim()
             ),
           ];
+
+        case "Month":
       }
     };
 
@@ -157,6 +159,8 @@ const App = () => {
 
   const [openEdit, setOpenDEdit] = useState(false);
 
+  const [openDependency, setOpenDependency] = useState(false);
+
   const handleClose = () => {
     setOpenDone(false);
   };
@@ -169,106 +173,112 @@ const App = () => {
     setOpenDEdit(false);
   };
 
+  const handleDependencyClose = () => {
+    setOpenDependency(false);
+  };
+
   const lastPostIndex = currentPage * todosPerPage;
   const firstPostIndex = lastPostIndex - todosPerPage;
   const currentToDos = todos.slice(firstPostIndex, lastPostIndex);
 
   return (
     <div>
-      <div
-        style={{
-          textAlign: "center",
-          display: "block",
-          padding: 30,
-          margin: "auto",
-        }}
-      >
-        <EditToDoModal isOpen={openDone} onClose={handleClose}>
-          <>
-            <div className="resp-table-caption">
-              You have Following Dependencies
+      <EditToDoModal isOpen={openDone} onClose={handleClose}>
+        <>
+          <div className="resp-table-caption">
+            You have Following Dependencies
+          </div>
+          <div className="resp-table">
+            <div className="resp-table-header">
+              <div className="table-header-cell">Date</div>
+              <div className="table-header-cell">Title</div>
+              <div className="table-header-cell">Status</div>
+              <div className="table-header-cell">Priority</div>
+              <div className="table-header-cell">Action</div>
+              <div className="table-body-cell"></div>
+              <div className="table-body-cell"></div>
             </div>
-            <div className="resp-table">
-              <div className="resp-table-header">
-                <div className="table-header-cell">Date</div>
-                <div className="table-header-cell">Title</div>
-                <div className="table-header-cell">Status</div>
-                <div className="table-header-cell">Priority</div>
-                <div className="table-header-cell">Action</div>
-                <div className="table-body-cell"></div>
-                <div className="table-body-cell"></div>
-              </div>
-              <div className="resp-table-body">
-                {dependencyToDos?.map((todo) => (
-                  <div className="resp-table-row" key={todo._id}>
-                    <div className="table-body-cell">{todo.date}</div>
-                    <div className="table-body-cell">{todo.title}</div>
-                    <div className="table-body-cell">{todo.status}</div>
-                    <div className="table-body-cell">{todo.priority}</div>
-
-                    <div className="table-body-cell">
-                      <span className="icon">
-                        <img
-                          src={require("../src/components/Filters/Images/done.png")}
-                          onClick={() => doneDoToComplete(todo)}
-                        />
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        </EditToDoModal>
-        <EditToDoModal isOpen={openEdit} onClose={handleEditClose}>
-          <>
-            <div className="resp-table-caption">Edit a Task</div>
             <div className="resp-table-body">
-              <div className="resp-table-row ">
-                <div className="table-body-cell-non">
-                  <RadionButtonFilter
-                    setFunction={setPriorityEdit}
-                    buttonsProperty={[
-                      { label: "High", value: "High" },
-                      { label: "Medium", value: "Medium" },
-                      { label: "Low", value: "Low" },
-                    ]}
-                  />
-                </div>
-                <div className="table-body-cell-non">
-                  <RadionButtonFilter
-                    setFunction={setStatusEdit}
-                    buttonsProperty={[
-                      { label: "Done", value: "Done" },
-                      { label: "Not done", value: "NotDone" },
-                    ]}
-                  />
-                </div>
+              {dependencyToDos?.map((todo) => (
+                <div className="resp-table-row" key={todo._id}>
+                  <div className="table-body-cell">{todo.date}</div>
+                  <div className="table-body-cell">{todo.title}</div>
+                  <div className="table-body-cell">{todo.status}</div>
+                  <div className="table-body-cell">{todo.priority}</div>
 
-                <div className="table-body-cell-non">
-                  <input
-                    type="Date"
-                    id="start"
-                    name="start"
-                    min="2018-03"
-                    value={todo?.date}
-                    onChange={(e: any) => setDateEdit(e.target.value)}
-                  />
+                  <div className="table-body-cell">
+                    <span className="icon">
+                      <img
+                        src={require("../src/components/Filters/Images/done.png")}
+                        onClick={() => doneDoToComplete(todo)}
+                      />
+                    </span>
+                  </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </>
+      </EditToDoModal>
+      <EditToDoModal isOpen={openEdit} onClose={handleEditClose}>
+        <>
+          <div className="resp-table-caption">Edit a Task</div>
+          <div className="resp-table-body">
+            <div className="resp-table-row ">
+              <div className="table-body-cell-non">
+                <RadionButtonFilter
+                  setFunction={setPriorityEdit}
+                  buttonsProperty={[
+                    { label: "High", value: "High" },
+                    { label: "Medium", value: "Medium" },
+                    { label: "Low", value: "Low" },
+                  ]}
+                />
+              </div>
+              <div className="table-body-cell-non">
+                <RadionButtonFilter
+                  setFunction={setStatusEdit}
+                  buttonsProperty={[
+                    { label: "Done", value: "Done" },
+                    { label: "Not done", value: "NotDone" },
+                  ]}
+                />
               </div>
 
-              <div className="resp-table-row">
-                <div className="table-body-cell-non">
-                  <label className="title">Title</label>
-                  <input
-                    id="input-box"
-                    type="text"
-                    className="input-box"
-                    value={todo?.title.toString()}
-                    onChange={(e) => setTitleEdit(e.target.value)}
-                  />
-                </div>
+              <div className="table-body-cell-non">
+                <input
+                  type="Date"
+                  id="start"
+                  name="start"
+                  min="2018-03"
+                  value={todo?.date}
+                  onChange={(e: any) => setDateEdit(e.target.value)}
+                />
+              </div>
+            </div>
 
+            <div className="resp-table-row">
+              <div className="table-body-cell-non">
+                <label className="title">Title</label>
+                <input
+                  id="input-box"
+                  type="text"
+                  className="input-box"
+                  value={todo?.title.toString()}
+                  onChange={(e) => setTitleEdit(e.target.value)}
+                />
+              </div>
+              <div className="table-body-cell-non">
+                <div className="resp-table-row">
+                  <div className="table-body-cell-non">
+                    <label className="title">Add dependencies</label>
+                  </div>
+                  <div className="table-body-cell-non icon">
+                    <h1 onClick={() => setOpenDependency(true)}>+</h1>
+                  </div>
+                </div>
+              </div>
+              <div className="table-body-cell-non">
                 <div className="table-body-cell-non">
                   <button className="save-button" onClick={editToDoHandle}>
                     Save
@@ -276,9 +286,17 @@ const App = () => {
                 </div>
               </div>
             </div>
-          </>
-        </EditToDoModal>
-      </div>
+          </div>
+        </>
+      </EditToDoModal>
+
+      <EditToDoModal isOpen={openDependency} onClose={handleDependencyClose}>
+        <div>
+          Add dependencies are yet to be implemented Sorry for the
+          inconvenience.....
+        </div>
+      </EditToDoModal>
+
       <FilterPanel
         setPriority={setPriority}
         setStatus={setStatus}
