@@ -10,8 +10,11 @@ import { valuePair } from "./Interfaces/valuePair";
 import getDays from "./utility/DayCalculation";
 
 import EditToDoModal from "./components/Modals/EditToDoModal";
+import Pagination from "./components/Pagination";
 const App = () => {
   const [todos, setToDos] = useState<todo[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [todosPerPage, setTodosPerPage] = useState(10);
   const [dependencyToDos, setDependencyToDos] = useState<todo[]>([]);
 
   const [priority, setPriority] = useState<string>("High");
@@ -24,6 +27,7 @@ const App = () => {
     type: "",
     value: "",
   });
+
   const [titleForSave, setTitleForSave] = useState<string>("");
   const editToDo = (e: any) => {
     api
@@ -82,7 +86,7 @@ const App = () => {
       .getToDosByFilter(priority, status, searchText)
       .then((data) => setToDos(data))
       .catch((error) => console.log(error));
-  }, [priority, status, searchText]);
+  }, [priority, status, searchText, interval]);
 
   const handleInsert = () => {
     const getBody: any = () => {
@@ -131,6 +135,10 @@ const App = () => {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  const lastPostIndex = currentPage * todosPerPage;
+  const firstPostIndex = lastPostIndex - todosPerPage;
+  const currentToDos = todos.slice(firstPostIndex, lastPostIndex);
 
   return (
     <div>
@@ -186,11 +194,18 @@ const App = () => {
         setInterval={setInterval}
         setSearchText={setSearchText}
       />
+
       <ToDoList
-        todos={todos}
+        todos={currentToDos}
         editToDo={editToDo}
         deleteDoTo={deleteDoTo}
         doneDoTo={doneDoTo}
+      />
+      <Pagination
+        totalToDos={todos.length}
+        toDosPerPage={todosPerPage}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
       />
       <CreateToDos
         setPriority={setPriorityForSave}

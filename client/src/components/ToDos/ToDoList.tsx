@@ -16,7 +16,6 @@ const ToDoList = ({ todos, editToDo, deleteDoTo, doneDoTo }: props) => {
   return (
     <div>
       <div className="resp-table">
-        {/* <div className="resp-table-caption">Tasks List</div> */}
         <div className="resp-table-header">
           <div className="table-header-cell">Date</div>
           <div className="table-header-cell">Title</div>
