@@ -1,6 +1,6 @@
-import React, { SetStateAction, useEffect, useMemo, useState } from "react";
-import styles from "../RadioButton/Styles";
+import React, { useEffect, useState } from "react";
 import { radiobuttons } from "../../../Interfaces/radiobutton";
+import "./Style.css";
 interface prop {
   buttonsProperty: radiobuttons[];
   setFunction: React.Dispatch<React.SetStateAction<string>>;
@@ -16,10 +16,10 @@ const RadionButtonFilter = ({ buttonsProperty, setFunction }: prop) => {
 
   return (
     <div>
-      <div style={styles.container}>
-        <div style={styles.radioGroup}>
+      <div className="container">
+        <div className="radioGroup">
           {buttonsProperty?.map((ele, index) => (
-            <div style={styles.radioButton} key={index}>
+            <div className="radioButton" key={index}>
               <input
                 type="radio"
                 id={ele.value}
@@ -27,7 +27,7 @@ const RadionButtonFilter = ({ buttonsProperty, setFunction }: prop) => {
                 checked={selectedValue === ele.value}
                 onChange={() => setSelectedValue(ele.value)}
               />
-              <label htmlFor={ele.value} style={styles.radioLabel}>
+              <label htmlFor={ele.value} className="radioLabel">
                 {ele.label}
               </label>
             </div>
