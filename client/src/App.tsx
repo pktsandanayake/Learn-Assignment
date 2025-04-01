@@ -8,7 +8,7 @@ import FilterPanel from "./components/Filters/FilterPanel";
 import _debounce from "lodash/debounce";
 import CreateToDos from "./components/CreateToDos";
 import { valuePair } from "./Interfaces/valuePair";
-import getDays from "./utility/DayCalculation";
+import getDays from "./components/Filters/helpers/DayCalculation";
 
 import Pagination from "./components/Pagination";
 import RadionButtonFilter from "./components/Filters/RadioButton/RadionButtonFilter";

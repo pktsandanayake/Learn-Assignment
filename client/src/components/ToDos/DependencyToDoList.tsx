@@ -3,6 +3,7 @@ import { todo } from "../../Interfaces/todo";
 import "../Filters/Images/edit.png";
 import "../ToDos/Style.css";
 import { dependency } from "@/src/Interfaces/dependency";
+import { ItemRemove } from "../Filters/helpers/ArrayManipulations";
 
 interface props {
   todos: todo[];
@@ -16,12 +17,6 @@ const DependencyToDoList = ({ todos, setDependencies, onClose }: props) => {
     Ids: [],
     Objects: [],
   });
-
-  const ItemRemove = (Arr: any, obj: any) => {
-    const index = Arr.indexOf(obj);
-
-    return Arr.splice(index, 1);
-  };
 
   const handleCheckbox = (e: any, todo: todo) => {
     if (e) {

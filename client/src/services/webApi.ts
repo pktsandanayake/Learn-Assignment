@@ -1,6 +1,6 @@
 import axios from "axios";
 import { valuePair } from "../Interfaces/valuePair";
-import getDays from "../utility/DayCalculation";
+import getDays from "../components/Filters/helpers/DayCalculation";
 
 const ApiBaseUrl = "http://localhost:4000";
 
