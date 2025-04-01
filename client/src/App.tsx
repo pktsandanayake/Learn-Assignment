@@ -22,8 +22,15 @@ import STATUS from "./Enums/Status";
 const App = () => {
   const todosPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-
-  let [todo, setToDo] = useState<todo>();
+  const obj = {
+    _id: "",
+    priority: "",
+    status: "",
+    date: "",
+    title: "",
+    dependancy: [],
+  };
+  const [todo, setToDo] = useState<todo>(obj);
   const [todos, setToDos] = useState<todo[]>([]);
 
   const [parentTodoForDependency, setParentToDoForDependency] =
@@ -40,11 +47,6 @@ const App = () => {
   const [interval, setInterval] = useState<valuePair>({ type: "", value: "" });
   const [searchText, setSearchText] = useState<string>("");
 
-  const [priorityEdit, setPriorityEdit] = useState<string>("");
-  const [statusEdit, setStatusEdit] = useState<string>("");
-  const [dateEdit, setDateEdit] = useState<string>("");
-  const [titleEdit, setTitleEdit] = useState<string>("");
-
   const [priorityForSave, setPriorityForSave] = useState<string>("High");
   const [intervalForSave, setIntervalForSave] = useState<valuePair>({
     type: "",
@@ -57,11 +59,20 @@ const App = () => {
   const [openDependency, setOpenDependency] = useState(false);
   const [required, setRequired] = useState(false);
 
+  const setPriorityEdit = (e: any) => {
+    setToDo({ ...todo, priority: e });
+  };
+
+  const setStatusEdit = (e: any) => {
+    setToDo({ ...todo, status: e });
+  };
+
   const editToDo = (e: any) => {
     setToDo(e);
     setOpenDEdit(true);
   };
 
+  const dep = todo.dependancy.concat(AddDependencies.Ids);
   const editToDoHandle = () => {
     const editableObj = {
       ...todo,
@@ -69,9 +80,8 @@ const App = () => {
       priority: "High",
       date: "2025-04-02",
       title: "Unit Testing",
-      dependancy: AddDependencies.Ids,
+      dependancy: todo.dependancy.concat(AddDependencies.Ids),
     };
-
     console.log("Edit object", editableObj);
     api
       .editTodo(editableObj)
@@ -297,7 +307,7 @@ const App = () => {
                   name="start"
                   min="2018-03"
                   value={todo?.date}
-                  onChange={(e: any) => setDateEdit(e.target.value)}
+                  onChange={(e) => setToDo({ ...todo, date: e.target.value })}
                 />
               </div>
             </div>
@@ -310,7 +320,7 @@ const App = () => {
                   type="text"
                   className="input-box"
                   value={todo?.title.toString()}
-                  onChange={(e) => setTitleEdit(e.target.value)}
+                  onChange={(e) => setToDo({ ...todo, title: e.target.value })}
                 />
               </div>
               <div className="table-body-cell-non">
