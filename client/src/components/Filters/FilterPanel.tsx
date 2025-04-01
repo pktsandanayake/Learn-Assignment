@@ -1,8 +1,9 @@
-import React, { useState } from "react";
 import RadionButtonFilter from "./RadioButton/RadionButtonFilter";
 import CalendarFilter from "./CalendarFilter";
 import SearchTextFilter from "./SearchTextFilter";
 import { valuePair } from "@/src/Interfaces/valuePair";
+import PRIORITY from "../Enums/Priority";
+import STATUS from "../Enums/Status";
 interface prop {
   setPriority: React.Dispatch<React.SetStateAction<string>>;
   setStatus: React.Dispatch<React.SetStateAction<string>>;
@@ -22,9 +23,9 @@ const FilterPanel = ({
           <RadionButtonFilter
             setFunction={setPriority}
             buttonsProperty={[
-              { label: "High", value: "High" },
-              { label: "Medium", value: "Medium" },
-              { label: "Low", value: "Low" },
+              { label: PRIORITY.HIGH, value: PRIORITY.HIGH },
+              { label: PRIORITY.MEDIUM, value: PRIORITY.MEDIUM },
+              { label: PRIORITY.LOW, value: PRIORITY.LOW },
             ]}
           />
         </div>
@@ -32,8 +33,8 @@ const FilterPanel = ({
           <RadionButtonFilter
             setFunction={setStatus}
             buttonsProperty={[
-              { label: "Done", value: "Done" },
-              { label: "Not done", value: "NotDone" },
+              { label: STATUS.DONELABEL, value: STATUS.DONE },
+              { label: STATUS.NOTDONELABEL, value: STATUS.NOTDONE },
             ]}
           />
         </div>

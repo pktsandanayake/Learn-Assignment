@@ -1,12 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RadionButtonFilter from "./RadioButton/RadionButtonFilter";
 import { valuePair } from "@/src/Interfaces/valuePair";
+import DateFormating from "./helpers/DateFormating";
+import INTERVAL from "../Enums/Interval";
 
 interface prop {
   setFunction: React.Dispatch<React.SetStateAction<valuePair>>;
 }
 const CalendarFilter = ({ setFunction }: prop) => {
-  const [interval, setInterval] = useState<string>("Date");
+  const [interval, setInterval] = useState<string>(INTERVAL.DATE);
+  const dateValeString =
+    interval == INTERVAL.DATE
+      ? DateFormating.getCurrentDateString()
+      : interval == INTERVAL.WEEK
+      ? DateFormating.getCurrentWeekString()
+      : interval == INTERVAL.MONTH
+      ? DateFormating.getCurrentMonthString()
+      : INTERVAL.EMPTY;
+  const [formattedDatePart, setFormattedDatePart] =
+    useState<string>(dateValeString);
+
+  useEffect(() => {
+    setFormattedDatePart(dateValeString);
+  }, [interval]);
 
   return (
     <div className="resp-table-row">
@@ -14,9 +30,9 @@ const CalendarFilter = ({ setFunction }: prop) => {
         <RadionButtonFilter
           setFunction={setInterval}
           buttonsProperty={[
-            { label: "Daily", value: "Date" },
-            { label: "Weekly", value: "Week" },
-            { label: "Monthly", value: "Month" },
+            { label: INTERVAL.DAILY, value: INTERVAL.DATE },
+            { label: INTERVAL.WEEKLY, value: INTERVAL.WEEK },
+            { label: INTERVAL.MONTHLY, value: INTERVAL.MONTH },
           ]}
         />
       </div>
@@ -27,9 +43,11 @@ const CalendarFilter = ({ setFunction }: prop) => {
             id="start"
             name="start"
             min="2018-03"
-            onChange={(e: any) =>
-              setFunction({ type: interval, value: e.target.value })
-            }
+            value={formattedDatePart}
+            onChange={(e: any) => {
+              setFormattedDatePart(e.target.value);
+              setFunction({ type: interval, value: e.target.value });
+            }}
           />
         </div>
       </div>

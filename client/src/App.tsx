@@ -142,17 +142,36 @@ const App = () => {
           ];
 
         case "Month":
+          return [
+            getDays.getDaysByWeek(intervalForSave.value).map((e) =>
+              `{
+            "date": "${e[2]}-${e[1]}-${e[0]}",
+            "priority": "${priorityForSave}",
+            "status": "NotDone",
+            "title": "${titleForSave}",
+            "dependancy": []
+          }`.trim()
+            ),
+          ];
       }
     };
 
-    api
-      .saveTodos(getBody())
-      .then((e) => {
-        loadView();
-        setStatus("NotDone");
-        console.log("Data saved", e);
-      })
-      .catch((error) => console.log(error));
+    console.log("Body : ", [
+      {
+        date: intervalForSave.value,
+        priority: priorityForSave,
+        status: "NotDone",
+        title: titleForSave,
+      },
+    ]);
+    //   api
+    //     .saveTodos(getBody())
+    //     .then((e) => {
+    //       loadView();
+    //       setStatus("NotDone");
+    //       console.log("Data saved", e);
+    //     })
+    //     .catch((error) => console.log(error));
   };
 
   const [openDone, setOpenDone] = useState(false);
