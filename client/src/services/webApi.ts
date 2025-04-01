@@ -1,4 +1,6 @@
 import axios from "axios";
+import { valuePair } from "../Interfaces/valuePair";
+import getDays from "../utility/DayCalculation";
 
 const ApiBaseUrl = "http://localhost:4000";
 
@@ -14,10 +16,14 @@ const getToDosByDate = async (Date: string) => {
 const getToDosByFilter = async (
   priority: string,
   status: string,
-  title: string
+  title: string,
+  interval: valuePair
 ) => {
   console.log("Serch function is calling....");
   const titleParam = title ? title : "NoTitle";
+  const days = getDays.getDaysByWeek(interval.type);
+  console.log("Number of days....", days);
+
   return await axios
     .get(`${ApiBaseUrl}/todos/filter/${priority}/${status}/${titleParam}`)
     .then((data) => {
@@ -36,24 +42,22 @@ const getToDosByDependency = async (e: any) => {
 };
 
 const saveTodos = async (body: any) => {
-  const Tbody = [
-    {
-      date: "2025-03-31",
-      title: "Grass cutting - Last day-Testing...bulk insertion",
-      status: "NotDone",
-      priority: "Medium",
-      dependancy: [],
-    },
-    {
-      date: "2025-03-31",
-      title: "Grass cutting - Last day-Testing...",
-      status: "NotDone",
-      priority: "Low",
-      dependancy: [],
-    },
-  ];
-
-  //console.log(body);
+  // const Tbody = [
+  //   {
+  //     date: "2025-03-31",
+  //     title: "Grass cutting - Last day-Testing...bulk insertion",
+  //     status: "NotDone",
+  //     priority: "Medium",
+  //     dependancy: [],
+  //   },
+  //   {
+  //     date: "2025-03-31",
+  //     title: "Grass cutting - Last day-Testing...",
+  //     status: "NotDone",
+  //     priority: "Low",
+  //     dependancy: [],
+  //   },
+  // ];
 
   return await axios
     .post(`${ApiBaseUrl}/todos`, body, {

@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import RadionButtonFilter from "./RadioButton/RadionButtonFilter";
 import { valuePair } from "@/src/Interfaces/valuePair";
 import DateFormating from "./helpers/DateFormating";
-import INTERVAL from "../Enums/Interval";
+import INTERVAL from "../../Enums/Interval";
 
 interface prop {
   setFunction: React.Dispatch<React.SetStateAction<valuePair>>;
 }
 const CalendarFilter = ({ setFunction }: prop) => {
-  const [interval, setInterval] = useState<string>(INTERVAL.DATE);
+  const [intervalType, setInterval] = useState<string>(INTERVAL.DATE);
   const dateValeString =
-    interval == INTERVAL.DATE
+    intervalType == INTERVAL.DATE
       ? DateFormating.getCurrentDateString()
-      : interval == INTERVAL.WEEK
+      : intervalType == INTERVAL.WEEK
       ? DateFormating.getCurrentWeekString()
-      : interval == INTERVAL.MONTH
+      : intervalType == INTERVAL.MONTH
       ? DateFormating.getCurrentMonthString()
       : INTERVAL.EMPTY;
   const [formattedDatePart, setFormattedDatePart] =
@@ -22,7 +22,8 @@ const CalendarFilter = ({ setFunction }: prop) => {
 
   useEffect(() => {
     setFormattedDatePart(dateValeString);
-  }, [interval]);
+    setFunction({ type: intervalType, value: dateValeString });
+  }, [intervalType]);
 
   return (
     <div className="resp-table-row">
@@ -39,14 +40,14 @@ const CalendarFilter = ({ setFunction }: prop) => {
       <div className="table-body-cell-non">
         <div className="resp-table-row">
           <input
-            type={interval}
+            type={intervalType}
             id="start"
             name="start"
             min="2018-03"
             value={formattedDatePart}
             onChange={(e: any) => {
               setFormattedDatePart(e.target.value);
-              setFunction({ type: interval, value: e.target.value });
+              setFunction({ type: intervalType, value: e.target.value });
             }}
           />
         </div>

@@ -3,6 +3,7 @@ import RadionButtonFilter from "./Filters/RadioButton/RadionButtonFilter";
 import CalendarFilter from "./Filters/CalendarFilter";
 import SearchTextFilter from "./Filters/SearchTextFilter";
 import { valuePair } from "../Interfaces/valuePair";
+import PRIORITY from "../Enums/Priority";
 
 interface prop {
   setPriority: React.Dispatch<React.SetStateAction<string>>;
@@ -25,9 +26,9 @@ const CreateToDos = ({
             <RadionButtonFilter
               setFunction={setPriority}
               buttonsProperty={[
-                { label: "High", value: "High" },
-                { label: "Medium", value: "Medium" },
-                { label: "Low", value: "Low" },
+                { label: PRIORITY.HIGH, value: PRIORITY.HIGH },
+                { label: PRIORITY.MEDIUM, value: PRIORITY.MEDIUM },
+                { label: PRIORITY.MEDIUM, value: PRIORITY.MEDIUM },
               ]}
             />
           </div>

@@ -9,15 +9,19 @@ import CreateToDos from "./components/CreateToDos";
 import { valuePair } from "./Interfaces/valuePair";
 import getDays from "./utility/DayCalculation";
 
-import EditToDoModal from "./components/Modals/EditToDoModal";
 import Pagination from "./components/Pagination";
 import RadionButtonFilter from "./components/Filters/RadioButton/RadionButtonFilter";
 
+import Modal from "./components/Modals/Modal";
+import ErrorModal from "./components/Modals/ErrorModal";
+
 const App = () => {
+  const todosPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+
   let [todo, setToDo] = useState<todo>();
   const [todos, setToDos] = useState<todo[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const todosPerPage = 10;
+
   const [dependencyToDos, setDependencyToDos] = useState<todo[]>([]);
 
   const [priority, setPriority] = useState<string>("High");
@@ -104,22 +108,28 @@ const App = () => {
 
   const loadView = () => {
     api
-      .getToDosByFilter(priority, status, searchText)
+      .getToDosByFilter(priority, status, searchText, interval)
       .then((data) => setToDos(data))
       .catch((error) => console.log(error));
   };
   useEffect(() => {
+    console.log("Interval changes in use efect", interval.value);
     api
-      .getToDosByFilter(priority, status, searchText)
+      .getToDosByFilter(priority, status, searchText, interval)
       .then((data) => setToDos(data))
       .catch((error) => console.log(error));
-  }, [priority, status, searchText, interval]);
+  }, [priority, status, searchText, interval.type, interval.value]);
 
   const handleInsert = () => {
+    if (!titleForSave) {
+      setRequired(true);
+      return;
+    }
+
     const getBody: any = () => {
       switch (intervalForSave.type) {
         case "Date":
-          return [
+          const bodyDate = [
             {
               date: intervalForSave.value,
               priority: priorityForSave,
@@ -127,12 +137,13 @@ const App = () => {
               title: titleForSave,
             },
           ];
+          return bodyDate;
 
         case "Week":
-          return [
-            getDays.getDaysByWeek(intervalForSave.value).map((e) =>
+          const bodyWeek = [
+            getDays.getDaysByWeek(intervalForSave.value).map((date) =>
               `{
-              "date": "${e[2]}-${e[1]}-${e[0]}",
+              "date": "${date}",
               "priority": "${priorityForSave}",
               "status": "NotDone",
               "title": "${titleForSave}",
@@ -140,38 +151,36 @@ const App = () => {
             }`.trim()
             ),
           ];
+          return bodyWeek;
 
         case "Month":
-          return [
+          const bodyMonth = [
             getDays.getDaysByWeek(intervalForSave.value).map((e) =>
               `{
-            "date": "${e[2]}-${e[1]}-${e[0]}",
-            "priority": "${priorityForSave}",
-            "status": "NotDone",
-            "title": "${titleForSave}",
-            "dependancy": []
-          }`.trim()
+          "date": "",
+          "priority": "${priorityForSave}",
+          "status": "NotDone",
+          "title": "${titleForSave}",
+          "dependancy": []
+        }`.trim()
             ),
           ];
+          return bodyMonth;
       }
     };
 
-    console.log("Body : ", [
-      {
-        date: intervalForSave.value,
-        priority: priorityForSave,
-        status: "NotDone",
-        title: titleForSave,
-      },
-    ]);
-    //   api
-    //     .saveTodos(getBody())
-    //     .then((e) => {
-    //       loadView();
-    //       setStatus("NotDone");
-    //       console.log("Data saved", e);
-    //     })
-    //     .catch((error) => console.log(error));
+    console.log("Body : ", getBody());
+
+    api
+      .saveTodos(getBody())
+      .then((e) => {
+        setTitleForSave("");
+        loadView();
+        setStatus("NotDone");
+
+        console.log("Data saved", e);
+      })
+      .catch((error) => console.log(error));
   };
 
   const [openDone, setOpenDone] = useState(false);
@@ -179,6 +188,12 @@ const App = () => {
   const [openEdit, setOpenDEdit] = useState(false);
 
   const [openDependency, setOpenDependency] = useState(false);
+
+  const [required, setRequired] = useState(false);
+
+  const handleRequiredClose = () => {
+    setRequired(false);
+  };
 
   const handleClose = () => {
     setOpenDone(false);
@@ -202,7 +217,7 @@ const App = () => {
 
   return (
     <div>
-      <EditToDoModal isOpen={openDone} onClose={handleClose}>
+      <Modal isOpen={openDone} onClose={handleClose}>
         <>
           <div className="resp-table-caption">
             You have Following Dependencies
@@ -238,8 +253,8 @@ const App = () => {
             </div>
           </div>
         </>
-      </EditToDoModal>
-      <EditToDoModal isOpen={openEdit} onClose={handleEditClose}>
+      </Modal>
+      <Modal isOpen={openEdit} onClose={handleEditClose}>
         <>
           <div className="resp-table-caption">Edit a Task</div>
           <div className="resp-table-body">
@@ -307,14 +322,18 @@ const App = () => {
             </div>
           </div>
         </>
-      </EditToDoModal>
+      </Modal>
 
-      <EditToDoModal isOpen={openDependency} onClose={handleDependencyClose}>
+      <Modal isOpen={openDependency} onClose={handleDependencyClose}>
         <div>
           Add dependencies are yet to be implemented Sorry for the
           inconvenience.....
         </div>
-      </EditToDoModal>
+      </Modal>
+
+      <ErrorModal isOpen={required} onClose={handleRequiredClose}>
+        <div className="required">Title is reruired !</div>
+      </ErrorModal>
 
       <FilterPanel
         setPriority={setPriority}

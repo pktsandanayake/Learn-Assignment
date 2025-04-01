@@ -2,8 +2,8 @@ import RadionButtonFilter from "./RadioButton/RadionButtonFilter";
 import CalendarFilter from "./CalendarFilter";
 import SearchTextFilter from "./SearchTextFilter";
 import { valuePair } from "@/src/Interfaces/valuePair";
-import PRIORITY from "../Enums/Priority";
-import STATUS from "../Enums/Status";
+import PRIORITY from "../../Enums/Priority";
+import STATUS from "../../Enums/Status";
 interface prop {
   setPriority: React.Dispatch<React.SetStateAction<string>>;
   setStatus: React.Dispatch<React.SetStateAction<string>>;

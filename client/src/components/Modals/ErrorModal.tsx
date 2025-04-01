@@ -4,18 +4,17 @@ interface prop {
   onClose: () => void;
   children: any;
 }
-const EditToDoModal = ({ isOpen, onClose, children }: prop) => {
+const Modal = ({ isOpen, onClose, children }: prop) => {
   if (!isOpen) return null;
   return (
     <div className="top-div">
       <div className="bottom-dev">
         <div onClick={onClose} className="close-icon">
-          X
+          {children}
         </div>
-        {children}
       </div>
     </div>
   );
 };
 
-export default EditToDoModal;
+export default Modal;

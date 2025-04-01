@@ -7,6 +7,7 @@ const SearchTextFilter = ({ setFunction }: prop) => {
   const Handler = (e: any) => {
     setFunction(e);
   };
+
   useCallback(() => Handler, [Handler]);
 
   console.log("Rendering Text Control");

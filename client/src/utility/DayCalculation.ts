@@ -6,7 +6,7 @@ const getDaysByWeek = (interval: string) => {
   );
   const dow = simple.getDay();
   const ISOweekStart = simple;
-  if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
+  if (dow <= 4) ISOweekStart.setDate(simple.getDate() - simple.getDay());
   else ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
   const temp = {
     d: ISOweekStart.getDate(),
@@ -22,7 +22,7 @@ const getDaysByWeek = (interval: string) => {
       temp.d = 1;
     }
     return new Date(temp.y, temp.m, temp.d++).toLocaleDateString();
-  }).map((e) => e.split("/"));
+  });
 };
 
 const getDays = { getDaysByWeek };

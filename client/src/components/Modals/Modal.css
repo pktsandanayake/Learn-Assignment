@@ -20,3 +20,8 @@
   border-radius: 10px;
   box-shadow: 2px solid black;
 }
+
+.required {
+  color: red;
+  font-weight: bold;
+}
