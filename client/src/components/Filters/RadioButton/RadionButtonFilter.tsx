@@ -27,7 +27,9 @@ const RadionButtonFilter = ({ buttonsProperty, setFunction }: prop) => {
                 checked={selectedValue === ele.value}
                 onChange={() => setSelectedValue(ele.value)}
               />
-              <label className="radioLabel">{ele.label}</label>
+              <label htmlFor={ele.value} className="radioLabel">
+                {ele.label}
+              </label>
             </div>
           ))}
         </div>

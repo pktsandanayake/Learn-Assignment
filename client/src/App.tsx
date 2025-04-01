@@ -2,6 +2,7 @@ import "./App.css";
 import api from "../src/services/webApi";
 import { useEffect, useState } from "react";
 import { todo } from "./Interfaces/todo";
+import { dependency } from "./Interfaces/dependency";
 import ToDoList from "./components/ToDos/ToDoList";
 import FilterPanel from "./components/Filters/FilterPanel";
 import _debounce from "lodash/debounce";
@@ -15,6 +16,9 @@ import RadionButtonFilter from "./components/Filters/RadioButton/RadionButtonFil
 import Modal from "./components/Modals/Modal";
 import ErrorModal from "./components/Modals/ErrorModal";
 
+import DependencyToDoList from "./components/ToDos/DependencyToDoList";
+import STATUS from "./Enums/Status";
+
 const App = () => {
   const todosPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +26,14 @@ const App = () => {
   let [todo, setToDo] = useState<todo>();
   const [todos, setToDos] = useState<todo[]>([]);
 
+  const [parentTodoForDependency, setParentToDoForDependency] =
+    useState<todo>();
   const [dependencyToDos, setDependencyToDos] = useState<todo[]>([]);
+
+  const [AddDependencies, setAddDependencies] = useState<dependency>({
+    Ids: [],
+    Objects: [],
+  });
 
   const [priority, setPriority] = useState<string>("High");
   const [status, setStatus] = useState<string>("Done");
@@ -39,8 +50,12 @@ const App = () => {
     type: "",
     value: "",
   });
-
   const [titleForSave, setTitleForSave] = useState<string>("");
+
+  const [openDone, setOpenDone] = useState(false);
+  const [openEdit, setOpenDEdit] = useState(false);
+  const [openDependency, setOpenDependency] = useState(false);
+  const [required, setRequired] = useState(false);
 
   const editToDo = (e: any) => {
     setToDo(e);
@@ -50,21 +65,26 @@ const App = () => {
   const editToDoHandle = () => {
     const editableObj = {
       ...todo,
-      status: statusEdit,
-      priority: priorityEdit,
-      date: dateEdit,
-      title: titleEdit,
+      status: "NotDone",
+      priority: "High",
+      date: "2025-04-02",
+      title: "Unit Testing",
+      dependancy: AddDependencies.Ids,
     };
 
     console.log("Edit object", editableObj);
-    // api
-    //   .editTodo(editableObj)
-    //   .then((data) => {
-    //     handleEditClose();
-    //     loadView();
-    //     console.log(data);
-    //   })
-    //   .catch((error) => console.log(error));
+    api
+      .editTodo(editableObj)
+      .then((data) => {
+        handleEditClose();
+        loadView();
+        setAddDependencies({
+          Ids: [],
+          Objects: [],
+        });
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
   };
   const deleteDoTo = (e: any) => {
     api
@@ -77,6 +97,7 @@ const App = () => {
   };
 
   const doneDoTo = (e: any) => {
+    setParentToDoForDependency(e);
     api
       .getToDosByDependency(e)
       .then((data) => {
@@ -96,12 +117,10 @@ const App = () => {
   };
 
   const doneDoToComplete = (todo: any) => {
-    todo.status = "Done";
     api
-      .editTodo(todo)
+      .editTodo({ ...todo, status: STATUS.DONE })
       .then((data) => {
-        viewDependency(data);
-        console.log(data);
+        viewDependency(parentTodoForDependency);
       })
       .catch((error) => console.log(error));
   };
@@ -182,14 +201,6 @@ const App = () => {
       })
       .catch((error) => console.log(error));
   };
-
-  const [openDone, setOpenDone] = useState(false);
-
-  const [openEdit, setOpenDEdit] = useState(false);
-
-  const [openDependency, setOpenDependency] = useState(false);
-
-  const [required, setRequired] = useState(false);
 
   const handleRequiredClose = () => {
     setRequired(false);
@@ -321,6 +332,16 @@ const App = () => {
               </div>
             </div>
           </div>
+          <div className="resp-table-body">
+            {AddDependencies.Objects?.map((todo) => (
+              <div className="resp-table-row" key={todo._id}>
+                <div className="table-body-cell">{todo.date}</div>
+                <div className="table-body-cell">{todo.title}</div>
+                <div className="table-body-cell">{todo.status}</div>
+                <div className="table-body-cell">{todo.priority}</div>
+              </div>
+            ))}
+          </div>
         </>
       </Modal>
 
@@ -329,6 +350,24 @@ const App = () => {
           Add dependencies are yet to be implemented Sorry for the
           inconvenience.....
         </div>
+        <FilterPanel
+          setPriority={setPriority}
+          setStatus={setStatus}
+          setInterval={setInterval}
+          setSearchText={setSearchText}
+        />
+        <DependencyToDoList
+          todos={currentToDos}
+          setDependencies={setAddDependencies}
+          onClose={handleDependencyClose}
+        />
+
+        <Pagination
+          totalToDos={todos.length}
+          toDosPerPage={todosPerPage}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+        />
       </Modal>
 
       <ErrorModal isOpen={required} onClose={handleRequiredClose}>

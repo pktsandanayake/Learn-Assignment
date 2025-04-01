@@ -121,7 +121,7 @@ class ToDoController {
         todo.priority = priority;
         todo.dependancy = dependancy;
         await todo.save();
-        return res.json({ message: "Todo has been updated", todo });
+        return res.json({ todo });
       }
 
       return res.sendStatus(400);

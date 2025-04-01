@@ -1,10 +1,7 @@
-import React, { SetStateAction } from "react";
 import { todo } from "../../Interfaces/todo";
-import { AiFillEdit, AiFillDelete } from "react-icons/ai";
-import { MdDone } from "react-icons/md";
 import "../Filters/Images/edit.png";
 import "../ToDos/Style.css";
-import EditToDoModal from "../Modals/Modal";
+
 interface props {
   todos: todo[];
 
