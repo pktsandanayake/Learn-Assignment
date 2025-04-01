@@ -22,14 +22,12 @@ const RadionButtonFilter = ({ buttonsProperty, setFunction }: prop) => {
             <div className="radioButton" key={index}>
               <input
                 type="radio"
-                id={ele.value}
+                id={ele.value + Math.random()}
                 value={ele.value}
                 checked={selectedValue === ele.value}
                 onChange={() => setSelectedValue(ele.value)}
               />
-              <label htmlFor={ele.value} className="radioLabel">
-                {ele.label}
-              </label>
+              <label className="radioLabel">{ele.label}</label>
             </div>
           ))}
         </div>
