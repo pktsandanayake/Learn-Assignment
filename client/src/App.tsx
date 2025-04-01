@@ -332,7 +332,7 @@ const App = () => {
       </Modal>
 
       <ErrorModal isOpen={required} onClose={handleRequiredClose}>
-        <div className="required">Title is reruired !</div>
+        <div className="required">* Title is a rerquired field !</div>
       </ErrorModal>
 
       <FilterPanel
