@@ -4,7 +4,7 @@ interface prop {
   onClose: () => void;
   children: any;
 }
-const Modal = ({ isOpen, onClose, children }: prop) => {
+const MessagModal = ({ isOpen, onClose, children }: prop) => {
   if (!isOpen) return null;
   return (
     <div className="top-div">
@@ -17,4 +17,4 @@ const Modal = ({ isOpen, onClose, children }: prop) => {
   );
 };
 
-export default Modal;
+export default MessagModal;

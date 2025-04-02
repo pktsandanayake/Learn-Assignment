@@ -34,8 +34,15 @@
 
 .table-header-cell {
   display: table-cell;
-  padding: 10px;
+  /* padding: 10px; */
   text-align: left;
+  border-bottom: 1px solid black;
+}
+
+.table-header-cell-action {
+  display: table-cell;
+  /* padding: 10px; */
+  text-align: center;
   border-bottom: 1px solid black;
 }
 
@@ -78,4 +85,8 @@
   cursor: pointer;
   height: 30px;
   width: 50px;
+}
+
+.save {
+  color: green;
 }

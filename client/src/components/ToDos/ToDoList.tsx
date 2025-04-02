@@ -18,8 +18,8 @@ const ToDoList = ({ todos, editToDo, deleteDoTo, doneDoTo }: props) => {
           <div className="table-header-cell">Title</div>
           <div className="table-header-cell">Status</div>
           <div className="table-header-cell">Priority</div>
-          <div className="table-header-cell">Action</div>
           <div className="table-body-cell"></div>
+          <div className="table-header-cell">Action</div>
           <div className="table-body-cell"></div>
         </div>
         <div className="resp-table-body">

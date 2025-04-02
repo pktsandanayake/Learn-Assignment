@@ -14,10 +14,9 @@ import Pagination from "./components/Pagination";
 import RadionButtonFilter from "./components/Filters/RadioButton/RadionButtonFilter";
 
 import Modal from "./components/Modals/Modal";
-import ErrorModal from "./components/Modals/ErrorModal";
-
 import DependencyToDoList from "./components/ToDos/DependencyToDoList";
 import STATUS from "./Enums/Status";
+import MessagModal from "./components/Modals/MessagModal";
 
 const App = () => {
   const todosPerPage = 10;
@@ -58,6 +57,7 @@ const App = () => {
   const [openEdit, setOpenDEdit] = useState(false);
   const [openDependency, setOpenDependency] = useState(false);
   const [required, setRequired] = useState(false);
+  const [recordSave, setRecordSave] = useState(false);
 
   const setPriorityEdit = (e: any) => {
     setToDo({ ...todo, priority: e });
@@ -108,7 +108,21 @@ const App = () => {
       .getToDosByDependency(e)
       .then((data) => {
         setDependencyToDos(data);
-        if (data.length > 0) handleOpen();
+        if (data.length > 0) {
+          handleOpen();
+        } else {
+          doneDoToComplete(e);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const doneDoToComplete = (todo: any) => {
+    api
+      .editTodo({ ...todo, status: STATUS.DONE })
+      .then((data) => {
+        setRecordSave(true);
+        viewDependency(parentTodoForDependency);
       })
       .catch((error) => console.log(error));
   };
@@ -118,15 +132,6 @@ const App = () => {
       .getToDosByDependency(e)
       .then((data) => {
         setDependencyToDos(data);
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const doneDoToComplete = (todo: any) => {
-    api
-      .editTodo({ ...todo, status: STATUS.DONE })
-      .then((data) => {
-        viewDependency(parentTodoForDependency);
       })
       .catch((error) => console.log(error));
   };
@@ -158,7 +163,7 @@ const App = () => {
             {
               date: intervalForSave.value,
               priority: priorityForSave,
-              status: "NotDone",
+              status: STATUS.DONE,
               title: titleForSave,
             },
           ];
@@ -170,7 +175,7 @@ const App = () => {
               `{
               "date": "${date}",
               "priority": "${priorityForSave}",
-              "status": "NotDone",
+              "status":  ${STATUS.NOTDONE},
               "title": "${titleForSave}",
               "dependancy": []
             }`.trim()
@@ -184,7 +189,7 @@ const App = () => {
               `{
           "date": "",
           "priority": "${priorityForSave}",
-          "status": "NotDone",
+          "status": ${STATUS.NOTDONE},
           "title": "${titleForSave}",
           "dependancy": []
         }`.trim()
@@ -201,13 +206,15 @@ const App = () => {
       .then((e) => {
         setTitleForSave("");
         loadView();
-        setStatus("NotDone");
-
+        setStatus(STATUS.NOTDONE);
+        setRecordSave(true);
         console.log("Data saved", e);
       })
       .catch((error) => console.log(error));
   };
-
+  const handleRecordSavedClose = () => {
+    setRecordSave(false);
+  };
   const handleRequiredClose = () => {
     setRequired(false);
   };
@@ -376,9 +383,13 @@ const App = () => {
         />
       </Modal>
 
-      <ErrorModal isOpen={required} onClose={handleRequiredClose}>
+      <MessagModal isOpen={required} onClose={handleRequiredClose}>
         <div className="required">* Title is a rerquired field !</div>
-      </ErrorModal>
+      </MessagModal>
+
+      <MessagModal isOpen={recordSave} onClose={handleRecordSavedClose}>
+        <div className="save">Record saved....!</div>
+      </MessagModal>
 
       <FilterPanel
         setPriority={setPriority}
@@ -410,6 +421,3 @@ const App = () => {
 };
 
 export default App;
-function useref(arg0: string) {
-  throw new Error("Function not implemented.");
-}
