@@ -76,13 +76,9 @@ const App = () => {
   const editToDoHandle = () => {
     const editableObj = {
       ...todo,
-      status: "NotDone",
-      priority: "High",
-      date: "2025-04-02",
-      title: "Unit Testing",
       dependancy: todo.dependancy.concat(AddDependencies.Ids),
     };
-    console.log("Edit object", editableObj);
+
     api
       .editTodo(editableObj)
       .then((data) => {
