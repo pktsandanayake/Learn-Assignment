@@ -90,3 +90,7 @@
 .save {
   color: green;
 }
+
+.devElement-Display-hide {
+  display: None;
+}

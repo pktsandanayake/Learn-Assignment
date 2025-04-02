@@ -17,20 +17,28 @@ import Modal from "./components/Modals/Modal";
 import DependencyToDoList from "./components/ToDos/DependencyToDoList";
 import STATUS from "./Enums/Status";
 import MessagModal from "./components/Modals/MessagModal";
+import debounce from "lodash/debounce";
+import STRING from "./Enums/String";
+import PRIORITY from "./Enums/Priority";
+import FilterPanelDependency from "./components/Filters/FilterPanelDependency";
 
 const App = () => {
   const todosPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const obj = {
-    _id: "",
-    priority: "",
-    status: "",
-    date: "",
-    title: "",
+  const [currentPageForCompletedToDos, setCurrentPageForCompletedToDos] =
+    useState(1);
+
+  const [todo, setToDo] = useState<todo>({
+    _id: STRING.EMPTY,
+    priority: STRING.EMPTY,
+    status: STRING.EMPTY,
+    date: STRING.EMPTY,
+    title: STRING.EMPTY,
     dependancy: [],
-  };
-  const [todo, setToDo] = useState<todo>(obj);
+  });
   const [todos, setToDos] = useState<todo[]>([]);
+
+  const [completedToDos, setCompletedToDos] = useState<todo[]>([]);
 
   const [parentTodoForDependency, setParentToDoForDependency] =
     useState<todo>();
@@ -41,17 +49,31 @@ const App = () => {
     Objects: [],
   });
 
-  const [priority, setPriority] = useState<string>("High");
-  const [status, setStatus] = useState<string>("Done");
-  const [interval, setInterval] = useState<valuePair>({ type: "", value: "" });
-  const [searchText, setSearchText] = useState<string>("");
-
-  const [priorityForSave, setPriorityForSave] = useState<string>("High");
-  const [intervalForSave, setIntervalForSave] = useState<valuePair>({
-    type: "",
-    value: "",
+  const [priority, setPriority] = useState<string>(PRIORITY.HIGH);
+  const [status, setStatus] = useState<string>(STATUS.DONE);
+  const [interval, setInterval] = useState<valuePair>({
+    type: STRING.EMPTY,
+    value: STRING.EMPTY,
   });
-  const [titleForSave, setTitleForSave] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>(STRING.EMPTY);
+
+  const [priorityCompleted, setPriorityCompleted] = useState<string>(
+    PRIORITY.HIGH
+  );
+  const [searchTextCompleted, setSearchTextCompleted] = useState<string>(
+    STRING.EMPTY
+  );
+  const [intervalCompleted, setIntervalCompleted] = useState<valuePair>({
+    type: STRING.EMPTY,
+    value: STRING.EMPTY,
+  });
+
+  const [priorityForSave, setPriorityForSave] = useState<string>(PRIORITY.HIGH);
+  const [intervalForSave, setIntervalForSave] = useState<valuePair>({
+    type: STRING.EMPTY,
+    value: STRING.EMPTY,
+  });
+  const [titleForSave, setTitleForSave] = useState<string>(STRING.EMPTY);
 
   const [openDone, setOpenDone] = useState(false);
   const [openEdit, setOpenDEdit] = useState(false);
@@ -67,12 +89,30 @@ const App = () => {
     setToDo({ ...todo, status: e });
   };
 
+  const loadFilteredDoDos = () => {
+    api
+      .getToDosByFilter(priority, status, searchText, interval)
+      .then((data) => setToDos(data))
+      .catch((error) => console.log(error));
+  };
+
+  const loadNotCompletedDoDos = () => {
+    api
+      .getToDosByFilter(
+        priorityCompleted,
+        STATUS.NOTDONE,
+        searchTextCompleted,
+        intervalCompleted
+      )
+      .then((data) => setCompletedToDos(data))
+      .catch((error) => console.log(error));
+  };
+
   const editToDo = (e: any) => {
     setToDo(e);
     setOpenDEdit(true);
   };
 
-  const dep = todo.dependancy.concat(AddDependencies.Ids);
   const editToDoHandle = () => {
     const editableObj = {
       ...todo,
@@ -83,7 +123,7 @@ const App = () => {
       .editTodo(editableObj)
       .then((data) => {
         handleEditClose();
-        loadView();
+        loadFilteredDoDos();
         setAddDependencies({
           Ids: [],
           Objects: [],
@@ -96,7 +136,7 @@ const App = () => {
     api
       .deleteTodo(e)
       .then((data) => {
-        loadView();
+        loadFilteredDoDos();
         console.log(data);
       })
       .catch((error) => console.log(error));
@@ -136,19 +176,25 @@ const App = () => {
       .catch((error) => console.log(error));
   };
 
-  const loadView = () => {
-    api
-      .getToDosByFilter(priority, status, searchText, interval)
-      .then((data) => setToDos(data))
-      .catch((error) => console.log(error));
-  };
+  const _debounce = debounce(() => {
+    loadFilteredDoDos();
+  }, 500);
+
+  const _debounceCompleted = debounce(() => {
+    loadNotCompletedDoDos();
+  }, 500);
+
   useEffect(() => {
-    console.log("Interval changes in use efect", interval.value);
-    api
-      .getToDosByFilter(priority, status, searchText, interval)
-      .then((data) => setToDos(data))
-      .catch((error) => console.log(error));
-  }, [priority, status, searchText, interval.type, interval.value]);
+    _debounceCompleted();
+    _debounce();
+  }, [
+    priority,
+    status,
+    searchText,
+    interval,
+    priorityCompleted,
+    searchTextCompleted,
+  ]);
 
   const handleInsert = () => {
     if (!titleForSave) {
@@ -205,13 +251,14 @@ const App = () => {
       .saveTodos(getBody())
       .then((e) => {
         setTitleForSave("");
-        loadView();
+        loadFilteredDoDos();
         setStatus(STATUS.NOTDONE);
         setRecordSave(true);
         console.log("Data saved", e);
       })
       .catch((error) => console.log(error));
   };
+
   const handleRecordSavedClose = () => {
     setRecordSave(false);
   };
@@ -234,10 +281,6 @@ const App = () => {
   const handleDependencyClose = () => {
     setOpenDependency(false);
   };
-
-  const lastPostIndex = currentPage * todosPerPage;
-  const firstPostIndex = lastPostIndex - todosPerPage;
-  const currentToDos = todos.slice(firstPostIndex, lastPostIndex);
 
   return (
     <div>
@@ -332,7 +375,14 @@ const App = () => {
                     <label className="title">Add dependencies</label>
                   </div>
                   <div className="table-body-cell-non icon">
-                    <h1 onClick={() => setOpenDependency(true)}>+</h1>
+                    <h1
+                      onClick={() => {
+                        loadNotCompletedDoDos();
+                        setOpenDependency(true);
+                      }}
+                    >
+                      +
+                    </h1>
                   </div>
                 </div>
               </div>
@@ -359,27 +409,25 @@ const App = () => {
       </Modal>
 
       <Modal isOpen={openDependency} onClose={handleDependencyClose}>
-        <div>
-          Add dependencies are yet to be implemented Sorry for the
-          inconvenience.....
-        </div>
-        <FilterPanel
-          setPriority={setPriority}
-          setStatus={setStatus}
-          setInterval={setInterval}
-          setSearchText={setSearchText}
+        <FilterPanelDependency
+          setPriority={setPriorityCompleted}
+          setInterval={setIntervalCompleted}
+          setSearchText={setSearchTextCompleted}
         />
         <DependencyToDoList
-          todos={currentToDos}
+          todos={completedToDos.slice(
+            currentPageForCompletedToDos * todosPerPage - todosPerPage,
+            currentPageForCompletedToDos * todosPerPage
+          )}
           setDependencies={setAddDependencies}
           onClose={handleDependencyClose}
         />
 
         <Pagination
-          totalToDos={todos.length}
+          totalToDos={completedToDos.length}
           toDosPerPage={todosPerPage}
-          setCurrentPage={setCurrentPage}
-          currentPage={currentPage}
+          setCurrentPage={setCurrentPageForCompletedToDos}
+          currentPage={currentPageForCompletedToDos}
         />
       </Modal>
 
@@ -399,7 +447,10 @@ const App = () => {
       />
 
       <ToDoList
-        todos={currentToDos}
+        todos={todos.slice(
+          currentPage * todosPerPage - todosPerPage,
+          currentPage * todosPerPage
+        )}
         editToDo={editToDo}
         deleteDoTo={deleteDoTo}
         doneDoTo={doneDoTo}

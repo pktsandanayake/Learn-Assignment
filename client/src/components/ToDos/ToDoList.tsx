@@ -45,14 +45,16 @@ const ToDoList = ({ todos, editToDo, deleteDoTo, doneDoTo }: props) => {
                   />
                 </span>
               </div>
-              <div className="table-body-cell">
-                <span className="icon">
-                  <img
-                    src={require("../Filters/Images/done.png")}
-                    onClick={() => doneDoTo(todo)}
-                  />
-                </span>
-              </div>
+              {todo.status == "NotDone" && (
+                <div className="table-body-cell">
+                  <span className="icon">
+                    <img
+                      src={require("../Filters/Images/done.png")}
+                      onClick={() => doneDoTo(todo)}
+                    />
+                  </span>
+                </div>
+              )}
             </div>
           ))}
         </div>
