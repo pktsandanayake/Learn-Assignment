@@ -2,7 +2,7 @@ import axios from "axios";
 import { valuePair } from "../Interfaces/valuePair";
 import getDays from "../components/Filters/helpers/DayCalculation";
 
-const ApiBaseUrl = "http://localhost:4000";
+const ApiBaseUrl = process.env.REACT_APP_ApiBaseUrl;
 
 const getToDosByDate = async (Date: string) => {
   return await axios
