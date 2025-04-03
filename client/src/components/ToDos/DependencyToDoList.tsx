@@ -44,7 +44,7 @@ const DependencyToDoList = ({ todos, setDependencies, onClose }: props) => {
         <div className="resp-table-header">
           <div className="table-header-cell">Date</div>
           <div className="table-header-cell">Title</div>
-          <div className="table-header-cell">Status</div>
+          <div className="table-body-cell"></div>
           <div className="table-header-cell">Priority</div>
           <div className="table-header-cell">Action</div>
           <div className="table-body-cell"></div>
@@ -55,7 +55,7 @@ const DependencyToDoList = ({ todos, setDependencies, onClose }: props) => {
             <div className="resp-table-row" key={todo._id}>
               <div className="table-body-cell">{todo.date}</div>
               <div className="table-body-cell">{todo.title}</div>
-              <div className="table-body-cell">{todo.status}</div>
+              <div className="table-body-cell"></div>
               <div className="table-body-cell">{todo.priority}</div>
               <div className="table-body-cell">
                 <input
