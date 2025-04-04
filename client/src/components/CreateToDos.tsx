@@ -28,7 +28,7 @@ const CreateToDos = ({
               buttonsProperty={[
                 { label: PRIORITY.HIGH, value: PRIORITY.HIGH },
                 { label: PRIORITY.MEDIUM, value: PRIORITY.MEDIUM },
-                { label: PRIORITY.MEDIUM, value: PRIORITY.MEDIUM },
+                { label: PRIORITY.LOW, value: PRIORITY.LOW },
               ]}
             />
           </div>
